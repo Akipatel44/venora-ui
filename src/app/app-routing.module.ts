@@ -6,6 +6,10 @@ import { AuthGuard } from './guards/auth.guard';
 const routes: Routes = [
   // demo protected admin route
   { path: 'admin/demo', component: DemoAdminComponent, canActivate: [AuthGuard] },
+  // convenience redirects for role-specific login paths
+  { path: 'admin/login', redirectTo: 'auth/login/admin' },
+  { path: 'owner/login', redirectTo: 'auth/login/owner' },
+  { path: 'login', redirectTo: 'auth/login' },
   // lazy-loaded module placeholders
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
