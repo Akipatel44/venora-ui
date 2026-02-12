@@ -1,0 +1,23 @@
+# Node
+node_modules/
+dist/
+build/
+
+# Angular cache / build artifacts
+.angular/
+
+# Environment
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs
+.vscode/
+.idea/
+
+# System
+.DS_Store
