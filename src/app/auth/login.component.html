@@ -1,0 +1,63 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-white px-4">
+  <div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+    <!-- Brand / Illustration -->
+    <div class="hidden lg:flex flex-col items-start justify-center p-8 bg-primary-50 rounded-lg">
+      <img src="assets/logo/logo.jpeg" alt="Venora" class="h-12 mb-6" onerror="(function(s){ if(!s._t1){s._t1=1; s.src='/assets/logo/logo.jpeg';}else if(!s._t2){s._t2=1; s.src='./assets/logo/logo.jpeg';}else if(!s._t3){s._t3=1; s.src='/venora-ui/assets/logo/logo.jpeg';}else{s.style.display='none';}})(this)" />
+      <h1 class="text-2xl font-bold text-primary-700 mb-2">Welcome back</h1>
+      <p class="text-sm text-gray-600">Sign in to manage your Venora account and access the dashboard.</p>
+    </div>
+
+    <!-- Form Card -->
+    <div class="bg-white rounded-lg shadow px-6 py-8">
+      <div class="max-w-md mx-auto">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-2xl font-semibold">Sign in</h2>
+          <img src="assets/logo/logo.jpeg" alt="V" class="h-8" onerror="(function(s){ if(!s._t1){s._t1=1; s.src='/assets/logo/logo.jpeg';}else if(!s._t2){s._t2=1; s.src='./assets/logo/logo.jpeg';}else if(!s._t3){s._t3=1; s.src='/venora-ui/assets/logo/logo.jpeg';}else{s.style.display='none';}})(this)" />
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Email address</label>
+            <input
+              type="email"
+              name="email"
+              [(ngModel)]="email"
+              required
+              class="w-full border border-gray-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-300"
+            />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <input
+              type="password"
+              name="password"
+              [(ngModel)]="password"
+              required
+              class="w-full border border-gray-200 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-300"
+            />
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <input id="remember" type="checkbox" class="w-4 h-4 text-primary-600 rounded" />
+              <label for="remember" class="text-sm text-gray-600">Remember me</label>
+            </div>
+            <a class="text-sm text-primary-600 hover:underline" href="#">Forgot?</a>
+          </div>
+
+          <div>
+            <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-primary-600 text-white rounded shadow">Sign in</button>
+          </div>
+
+          <div class="text-center text-sm text-gray-600">
+            Don't have an account?
+            <a (click)="goRegister()" class="text-primary-600 hover:underline cursor-pointer">Create one</a>
+          </div>
+
+          <pre class="mt-2 text-sm text-red-600" *ngIf="error">{{ error }}</pre>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

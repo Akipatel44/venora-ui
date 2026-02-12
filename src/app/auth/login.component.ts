@@ -8,24 +8,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-  <div class="p-4 max-w-md mx-auto">
-    <h2 class="text-xl font-semibold mb-4">Login</h2>
-    <form (ngSubmit)="onSubmit()">
-      <label class="block mb-2">Email
-        <input class="w-full border p-2 rounded" [(ngModel)]="email" name="email" required />
-      </label>
-      <label class="block mb-2">Password
-        <input type="password" class="w-full border p-2 rounded" [(ngModel)]="password" name="password" required />
-      </label>
-      <div class="flex items-center gap-2">
-        <button class="px-3 py-1 bg-blue-600 text-white rounded" type="submit">Login</button>
-        <button type="button" class="px-3 py-1 bg-gray-200 rounded" (click)="goRegister()">Register (customer)</button>
-      </div>
-    </form>
-    <pre class="mt-4 text-sm text-red-600" *ngIf="error">{{error}}</pre>
-  </div>
-  `
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
   email = '';

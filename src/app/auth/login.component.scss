@@ -1,0 +1,9 @@
+.bg-primary-50 { background-color: #F4E8EC; }
+.text-primary-700 { color: #8f1739; }
+.bg-primary-600 { background-color: #8f1739; }
+.focus\:ring-primary-300:focus { box-shadow: 0 0 0 4px rgba(143,23,57,0.12); }
+
+/* small tweaks for form */
+input[type="email"], input[type="password"] {
+  transition: box-shadow 0.12s ease;
+}

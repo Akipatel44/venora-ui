@@ -8,26 +8,8 @@ import { FormsModule } from '@angular/forms';
   selector: 'app-register',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  template: `
-  <div class="p-4 max-w-md mx-auto">
-    <h2 class="text-xl font-semibold mb-4">Register (Customer)</h2>
-    <form (ngSubmit)="onSubmit()">
-      <label class="block mb-2">Full name
-        <input class="w-full border p-2 rounded" [(ngModel)]="full_name" name="full_name" required />
-      </label>
-      <label class="block mb-2">Email
-        <input class="w-full border p-2 rounded" [(ngModel)]="email" name="email" required />
-      </label>
-      <label class="block mb-2">Password
-        <input type="password" class="w-full border p-2 rounded" [(ngModel)]="password" name="password" required />
-      </label>
-      <div>
-        <button class="px-3 py-1 bg-green-600 text-white rounded" type="submit">Register</button>
-      </div>
-    </form>
-    <pre class="mt-4 text-sm text-red-600" *ngIf="error">{{error}}</pre>
-  </div>
-  `
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
   full_name = '';
