@@ -1,0 +1,37 @@
+<aside class="fixed inset-y-0 z-50 text-white h-screen flex flex-col bg-primary-900 w-60">
+  <div class="h-16 flex items-center justify-between px-6">
+    <div class="flex items-center">
+      <img src="assets/logo/logo.svg" class="h-[38px]" alt="Venora" />
+    </div>
+    <button (click)="toggleSidebar()" class="w-8 h-8 rounded-full bg-primary-500 flex items-center justify-center">
+      <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav class="flex-1 px-3 py-6 overflow-y-auto">
+    <ul class="flex flex-col gap-1">
+      <li>
+        <a routerLink="/admin" class="group flex items-center rounded-lg mx-1 px-3 py-3 hover:bg-white">
+          <span class="text-sm text-white ml-3">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/admin/demo" class="group flex items-center rounded-lg mx-1 px-3 py-3 hover:bg-white">
+          <span class="text-sm text-white ml-3">Demo API</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <div class="px-3 py-6 border-t border-white/20">
+    <ul class="flex flex-col gap-1">
+      <li>
+        <a routerLink="/settings" class="group flex items-center rounded-lg mx-1 px-3 py-3 hover:bg-white">
+          <span class="text-sm text-white ml-3">Settings</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</aside>
