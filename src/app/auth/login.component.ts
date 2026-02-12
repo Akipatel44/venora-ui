@@ -43,9 +43,14 @@ export class LoginComponent {
     this.auth.login(payload).subscribe({
       next: (res: any) => {
         const token = res.access_token || res.token || '';
+        const role = res.role || this.role || null;
         if (token) {
           localStorage.setItem('access_token', token);
-          this.router.navigate(['/admin/demo']);
+          // redirect according to role
+          if (role === 'superadmin') this.router.navigate(['/admin']);
+          else if (role === 'subadmin') this.router.navigate(['/owner']);
+          else if (role === 'customer') this.router.navigate(['/customer']);
+          else this.router.navigate(['/']);
         } else {
           this.error = 'No token received';
         }
