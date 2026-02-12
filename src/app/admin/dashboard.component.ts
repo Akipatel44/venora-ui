@@ -5,6 +5,6 @@ import { CommonModule } from '@angular/common';
   selector: 'app-admin-dashboard',
   standalone: true,
   imports: [CommonModule],
-  template: `<div class="p-4"><h2 class="text-2xl font-bold">Welcome SuperAdmin</h2></div>`
+  templateUrl: './dashboard.component.html'
 })
 export class AdminDashboardComponent {}
