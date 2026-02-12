@@ -9,7 +9,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
       <button class="mt-2 px-3 py-1 bg-blue-600 text-white" (click)="callProtected()">Call Protected API</button>
       <pre class="mt-4 bg-gray-100 p-3 rounded">{{result | json}}</pre>
     </div>
-  `
+  `,
+  standalone: false
 })
 export class DemoAdminComponent {
   result: any = null;
