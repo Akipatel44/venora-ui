@@ -4,18 +4,7 @@ import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
-  template: `
-    <div *ngIf="!isAuthRoute" class="p-4 border-b border-gray-200 bg-white">
-      <div class="flex justify-between items-center">
-        <h1 class="text-2xl font-bold text-gray-900">Venora</h1>
-        <div class="flex gap-3">
-          <a *ngIf="!isLogged" class="text-sm text-blue-600 hover:text-blue-700 font-medium" routerLink="/auth/login">Login</a>
-          <button *ngIf="isLogged" (click)="logout()" class="text-sm px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">Logout</button>
-        </div>
-      </div>
-    </div>
-    <router-outlet></router-outlet>
-  `,
+  template: `<router-outlet></router-outlet>`,
   standalone: false
 })
 export class AppComponent {

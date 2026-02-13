@@ -1,7 +1,17 @@
 <div class="min-h-screen flex flex-col bg-gray-900">
-  <app-header></app-header>
+  <app-header 
+    [sidebarCollapsed]="sidebarCollapsed"
+    (logout)="onLogout()"
+    (mobileMenuToggle)="onMobileMenuToggle()"
+    (sidebarToggle)="onSidebarToggle($event)"
+  ></app-header>
   <div class="flex flex-1">
-    <app-sidebar></app-sidebar>
+    <app-sidebar
+      [isMobileMenuOpen]="mobileMenuOpen"
+      (sidebarToggle)="onSidebarToggle($event)"
+      (mobileMenuToggle)="onMobileMenuToggle()"
+      (mobileMenuClose)="onMobileMenuClose()"
+    ></app-sidebar>
     <main class="flex-1 p-6 overflow-auto bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <router-outlet></router-outlet>
     </main>
