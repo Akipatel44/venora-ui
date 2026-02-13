@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,7 +17,7 @@ export class HallListComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private hallService: HallService, private router: Router) {}
+  constructor(private hallService: HallService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loadHalls();
@@ -30,10 +30,12 @@ export class HallListComponent implements OnInit {
       next: (data: any[]) => {
         this.halls = data;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
         this.error = err?.error?.detail || 'Failed to load halls';
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -51,9 +53,11 @@ export class HallListComponent implements OnInit {
       this.hallService.deleteHall(id).subscribe({
         next: () => {
           this.halls = this.halls.filter(h => h.hall_id !== id);
+          this.cdr.markForCheck();
         },
         error: (err: any) => {
           this.error = err?.error?.detail || 'Failed to delete hall';
+          this.cdr.markForCheck();
         }
       });
     }

@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { HallService } from '../../../../owner/hall/services/hall.service';
+import { tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface Hall {
   hall_id: number;
@@ -30,7 +32,7 @@ export class HallDirectoryComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private hallService: HallService) {}
+  constructor(private hallService: HallService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadApprovedHalls();
@@ -39,18 +41,29 @@ export class HallDirectoryComponent implements OnInit {
   loadApprovedHalls(): void {
     this.loading = true;
     this.error = null;
-    this.hallService.getAllHalls().subscribe({
-      next: (data: any[]) => {
-        console.log('Halls loaded:', data);
-        this.approvedHalls = data.filter(hall => hall.status === 'approved');
-        this.loading = false;
-      },
-      error: (err: any) => {
-        console.error('Error loading halls:', err);
-        this.error = err?.error?.detail || 'Failed to load halls. Please try again later.';
-        this.loading = false;
-      }
-    });
+    this.hallService.getAllHalls()
+      .pipe(
+        tap((data: any[]) => {
+          console.log('Halls loaded:', data.length, 'halls');
+          this.approvedHalls = data.filter(hall => hall.status === 'approved');
+        }),
+        catchError((err: any) => {
+          console.error('Error loading halls:', err);
+          this.error = err?.error?.detail || 'Failed to load halls. Please try again later.';
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.cdr.markForCheck();
+          console.error('Subscription error:', err);
+        }
+      });
   }
 
   viewDetails(hallId: number): void {

@@ -12,10 +12,15 @@ export class HallService {
 
   private getHeaders(): HttpHeaders {
     const token = localStorage.getItem('access_token');
-    return new HttpHeaders({
-      'Authorization': `Bearer ${token}`,
+    console.log('Hall Service - Token:', token ? 'Present' : 'Missing');
+    let headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    console.log('Hall Service - Headers:', headers);
+    return headers;
   }
 
   createHall(data: any): Observable<any> {
@@ -27,6 +32,7 @@ export class HallService {
   }
 
   getAllHalls(): Observable<any[]> {
+    console.log('getAllHalls() called with URL:', this.apiUrl);
     return this.http.get<any[]>(this.apiUrl, { headers: this.getHeaders() });
   }
 

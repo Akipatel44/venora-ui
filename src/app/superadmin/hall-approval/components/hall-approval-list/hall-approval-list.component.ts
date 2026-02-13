@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { HallService } from '../../../../owner/hall/services/hall.service';
+import { tap, catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 interface Hall {
   hall_id: number;
@@ -32,7 +34,7 @@ export class HallApprovalListComponent implements OnInit {
   approvingHallId: number | null = null;
   blockingHallId: number | null = null;
 
-  constructor(private hallService: HallService) {}
+  constructor(private hallService: HallService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadHalls();
@@ -41,18 +43,29 @@ export class HallApprovalListComponent implements OnInit {
   loadHalls(): void {
     this.loading = true;
     this.error = null;
-    this.hallService.getAllHalls().subscribe({
-      next: (data: any[]) => {
-        console.log('Halls loaded:', data);
-        this.halls = data;
-        this.loading = false;
-      },
-      error: (err: any) => {
-        console.error('Error loading halls:', err);
-        this.error = err?.error?.detail || 'Failed to load halls. Please try again.';
-        this.loading = false;
-      }
-    });
+    this.hallService.getAllHalls()
+      .pipe(
+        tap((data: any[]) => {
+          console.log('Halls loaded:', data.length, 'halls');
+          this.halls = data;
+        }),
+        catchError((err: any) => {
+          console.error('Error loading halls:', err);
+          this.error = err?.error?.detail || 'Failed to load halls. Please try again.';
+          return of([]);
+        })
+      )
+      .subscribe({
+        next: () => {
+          this.loading = false;
+          this.cdr.markForCheck();
+        },
+        error: (err) => {
+          this.loading = false;
+          this.cdr.markForCheck();
+          console.error('Subscription error:', err);
+        }
+      });
   }
 
   approveHall(hallId: number): void {
@@ -63,10 +76,12 @@ export class HallApprovalListComponent implements OnInit {
           next: (halls: any[]) => {
             this.halls = halls;
             this.approvingHallId = null;
+            this.cdr.markForCheck();
           },
           error: (err: any) => {
             this.error = 'Failed to refresh halls.';
             this.approvingHallId = null;
+            this.cdr.markForCheck();
             console.error(err);
           }
         });
@@ -74,6 +89,7 @@ export class HallApprovalListComponent implements OnInit {
       error: (err: any) => {
         this.error = err?.error?.detail || 'Failed to approve hall. Please try again.';
         this.approvingHallId = null;
+        this.cdr.markForCheck();
         console.error(err);
       }
     });
@@ -87,10 +103,12 @@ export class HallApprovalListComponent implements OnInit {
           next: (halls: any[]) => {
             this.halls = halls;
             this.blockingHallId = null;
+            this.cdr.markForCheck();
           },
           error: (err: any) => {
             this.error = 'Failed to refresh halls.';
             this.blockingHallId = null;
+            this.cdr.markForCheck();
             console.error(err);
           }
         });
@@ -98,6 +116,7 @@ export class HallApprovalListComponent implements OnInit {
       error: (err: any) => {
         this.error = err?.error?.detail || 'Failed to block hall. Please try again.';
         this.blockingHallId = null;
+        this.cdr.markForCheck();
         console.error(err);
       }
     });
