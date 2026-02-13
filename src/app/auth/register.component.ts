@@ -14,13 +14,14 @@ import { FormsModule } from '@angular/forms';
 export class RegisterComponent {
   full_name = '';
   email = '';
-  password = '';
+  password = ''
+  role = 'customer';
   error: string | null = null;
 
   constructor(private auth: AuthService, private router: Router) {}
 
   onSubmit() {
-    const payload = { full_name: this.full_name, email: this.email, password: this.password, role: 'customer' };
+    const payload = { full_name: this.full_name, email: this.email, password: this.password, role: this.role };
     this.auth.register(payload).subscribe({
       next: (res) => this.router.navigate(['/auth/login']),
       error: (err) => this.error = (err?.error?.detail) || err.message || JSON.stringify(err)
