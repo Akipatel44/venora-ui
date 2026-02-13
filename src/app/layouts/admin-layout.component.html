@@ -3,7 +3,7 @@
     [sidebarCollapsed]="sidebarCollapsed"
     (logout)="onLogout()"
     (mobileMenuToggle)="onMobileMenuToggle()"
-    (sidebarToggle)="onSidebarToggle($event)"
+    (sidebarToggle)="sidebarCollapsed = !sidebarCollapsed"
   ></app-header>
   <div class="flex flex-1">
     <app-sidebar
