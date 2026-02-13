@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -29,7 +29,8 @@ export class HallEditComponent implements OnInit {
   constructor(
     private hallService: HallService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -52,10 +53,12 @@ export class HallEditComponent implements OnInit {
           description: data.description || ''
         };
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err: any) => {
         this.error = err?.error?.detail || 'Failed to load hall';
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
@@ -80,11 +83,13 @@ export class HallEditComponent implements OnInit {
 
     this.hallService.updateHall(this.hallId, payload).subscribe({
       next: () => {
+        this.cdr.markForCheck();
         this.router.navigate(['/owner/halls']);
       },
       error: (err: any) => {
         this.error = err?.error?.detail || 'Failed to update hall';
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }
