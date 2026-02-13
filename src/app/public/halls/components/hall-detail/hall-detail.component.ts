@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -16,7 +16,7 @@ export class HallDetailComponent implements OnInit {
   services: any[] = [];
   loading = true;
   error: string | null = null;
-  apiUrl = 'http://localhost:8000/api';
+  apiUrl = 'http://localhost:8000';
 
   constructor(
     private http: HttpClient,
@@ -33,11 +33,22 @@ export class HallDetailComponent implements OnInit {
     });
   }
 
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('access_token');
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
+
   loadHall(id: number) {
     this.loading = true;
     this.error = null;
     
-    this.http.get(`${this.apiUrl}/halls/${id}`).subscribe({
+    this.http.get(`${this.apiUrl}/halls/${id}`, { headers: this.getHeaders() }).subscribe({
       next: (data: any) => {
         this.hall = data;
         this.loadAmenities(id);
@@ -53,7 +64,7 @@ export class HallDetailComponent implements OnInit {
   }
 
   loadAmenities(hallId: number) {
-    this.http.get(`${this.apiUrl}/amenities/hall/${hallId}`).subscribe({
+    this.http.get(`${this.apiUrl}/amenities/hall/${hallId}`, { headers: this.getHeaders() }).subscribe({
       next: (data: any) => {
         this.amenities = data;
         this.cdr.markForCheck();
@@ -65,7 +76,7 @@ export class HallDetailComponent implements OnInit {
   }
 
   loadServices(hallId: number) {
-    this.http.get(`${this.apiUrl}/services/hall/${hallId}`).subscribe({
+    this.http.get(`${this.apiUrl}/services/hall/${hallId}`, { headers: this.getHeaders() }).subscribe({
       next: (data: any) => {
         this.services = data;
         this.loading = false;

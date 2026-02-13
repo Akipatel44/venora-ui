@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { HallService } from '../../../../owner/hall/services/hall.service';
 import { tap, catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -32,7 +32,12 @@ export class HallDirectoryComponent implements OnInit {
   loading = false;
   error: string | null = null;
 
-  constructor(private hallService: HallService, private cdr: ChangeDetectorRef, private router: Router) {}
+  constructor(
+    private hallService: HallService,
+    private cdr: ChangeDetectorRef,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
     this.loadApprovedHalls();
@@ -67,6 +72,6 @@ export class HallDirectoryComponent implements OnInit {
   }
 
   viewDetails(hallId: number): void {
-    this.router.navigate(['/halls', hallId]);
+    this.router.navigate([hallId], { relativeTo: this.route });
   }
 }
