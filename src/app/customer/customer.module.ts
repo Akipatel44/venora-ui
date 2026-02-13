@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', loadComponent: () => import('./dashboard.component').then(m => m.CustomerDashboardComponent), data: { roles: ['customer'] } }
+      { path: '', loadComponent: () => import('./dashboard.component').then(m => m.CustomerDashboardComponent) }
     ])
   ]
 })

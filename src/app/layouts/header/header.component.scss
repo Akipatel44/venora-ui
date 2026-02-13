@@ -1,7 +1,69 @@
 header {
-  min-height: 4rem;
-  max-height: 4rem;
-  z-index: 30;
+  background: linear-gradient(to right, #111827, #1f2937, #111827) !important;
+  border-bottom: 1px solid #374151 !important;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3) !important;
+  min-height: 4rem !important;
+  max-height: 4rem !important;
+  z-index: 20 !important;
+  flex-shrink: 0;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+// Force dark theme on all child elements
+header,
+header * {
+  background-color: transparent !important;
+}
+
+// Override Tailwind gradient to keep dark header
+header .bg-gradient-to-r {
+  background: linear-gradient(to right, #111827, #1f2937, #111827) !important;
+}
+
+// Text colors
+header .text-white {
+  color: white !important;
+}
+
+header .text-gray-400,
+header .text-gray-300,
+header .text-gray-500 {
+  color: #9ca3af !important;
+}
+
+header .text-red-400,
+header .text-red-300 {
+  color: #fca5a5 !important;
+}
+
+// Button hover states
+header button {
+  background: transparent !important;
+  color: #9ca3af !important;
+}
+
+header button:hover {
+  background-color: rgba(55, 65, 81, 0.5) !important;
+  color: white !important;
+}
+
+// Border colors
+header .border-gray-700,
+header .border-gray-600 {
+  border-color: #374151 !important;
+}
+
+// Notification badge
+header .bg-red-500 {
+  background-color: #ef4444 !important;
+}
+
+header .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
 }
 
 .profile-popover {
@@ -38,6 +100,15 @@ header {
     background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
   }
 }
 
