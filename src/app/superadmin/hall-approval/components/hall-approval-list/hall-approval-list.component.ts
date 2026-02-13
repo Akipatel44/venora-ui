@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { HallService } from '../../../../owner/hall/services/hall.service';
 import { tap, catchError } from 'rxjs/operators';
@@ -34,7 +35,7 @@ export class HallApprovalListComponent implements OnInit {
   approvingHallId: number | null = null;
   blockingHallId: number | null = null;
 
-  constructor(private hallService: HallService, private cdr: ChangeDetectorRef) {}
+  constructor(private hallService: HallService, private router: Router, private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.loadHalls();
@@ -124,5 +125,23 @@ export class HallApprovalListComponent implements OnInit {
 
   getPendingHalls(): Hall[] {
     return this.halls.filter(hall => hall.status === 'pending');
+  }
+
+  editHall(id: number): void {
+    this.router.navigate(['/admin/halls/edit', id]);
+  }
+
+  deleteHall(id: number): void {
+    if (confirm('Are you sure you want to delete this hall?')) {
+      this.hallService.deleteHall(id).subscribe({
+        next: () => {
+          this.loadHalls();
+        },
+        error: (err: any) => {
+          this.error = err?.error?.detail || 'Failed to delete hall';
+          this.cdr.markForCheck();
+        }
+      });
+    }
   }
 }
