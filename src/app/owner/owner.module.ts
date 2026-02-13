@@ -7,7 +7,8 @@ import { RouterModule } from '@angular/router';
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', loadComponent: () => import('./dashboard.component').then(m => m.OwnerDashboardComponent), data: { roles: ['subadmin'] } }
+      { path: '', loadComponent: () => import('./dashboard.component').then(m => m.OwnerDashboardComponent), data: { roles: ['subadmin'] } },
+      { path: 'halls', loadChildren: () => import('./hall/hall.module').then(m => m.HallModule) }
     ])
   ]
 })

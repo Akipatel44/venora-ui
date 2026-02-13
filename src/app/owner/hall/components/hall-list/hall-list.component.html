@@ -1,0 +1,87 @@
+<div class="min-h-screen bg-gray-50 py-8 px-4">
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold text-gray-900">My Halls</h1>
+      <button
+        (click)="createHall()"
+        class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+      >
+        + Add Hall
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <p class="text-red-700 text-sm">{{ error }}</p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-12">
+      <p class="text-gray-600">Loading halls...</p>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && halls.length === 0" class="bg-white rounded-lg shadow p-12 text-center">
+      <p class="text-gray-600 mb-4">No halls yet. Create your first hall to get started.</p>
+      <button
+        (click)="createHall()"
+        class="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition"
+      >
+        Create Hall
+      </button>
+    </div>
+
+    <!-- Halls Table -->
+    <div *ngIf="!loading && halls.length > 0" class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Hall Name</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Location</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Capacity</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Price (QAR)</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
+              <th class="px-6 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr *ngFor="let hall of halls" class="hover:bg-gray-50">
+              <td class="px-6 py-4 text-sm text-gray-900">{{ hall.hall_name }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700">{{ hall.location }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700">{{ hall.capacity }}</td>
+              <td class="px-6 py-4 text-sm text-gray-700">{{ hall.base_price }}</td>
+              <td class="px-6 py-4 text-sm">
+                <span
+                  [ngClass]="{
+                    'bg-yellow-100 text-yellow-800': hall.status === 'pending',
+                    'bg-green-100 text-green-800': hall.status === 'approved',
+                    'bg-red-100 text-red-800': hall.status === 'blocked'
+                  }"
+                  class="px-3 py-1 rounded-full text-xs font-semibold"
+                >
+                  {{ hall.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm">
+                <button
+                  (click)="editHall(hall.hall_id)"
+                  class="text-blue-600 hover:text-blue-700 mr-4 transition"
+                >
+                  Edit
+                </button>
+                <button
+                  (click)="deleteHall(hall.hall_id)"
+                  class="text-red-600 hover:text-red-700 transition"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,128 @@
+<div class="min-h-screen bg-gray-50 py-8 px-4">
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+      <button
+        (click)="goBack()"
+        class="px-4 py-2 text-primary-600 font-medium hover:text-primary-700 transition mb-4"
+      >
+        ← Back to Halls
+      </button>
+      <h1 class="text-3xl font-bold text-gray-900">Edit Hall</h1>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading && hallId" class="text-center py-12">
+      <p class="text-gray-600">Loading hall details...</p>
+    </div>
+
+    <!-- Form Card -->
+    <div *ngIf="!loading || !hallId" class="bg-white rounded-lg shadow p-8">
+      <form (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Error Message -->
+        <div *ngIf="error" class="p-4 bg-red-50 border border-red-200 rounded-lg">
+          <p class="text-red-700 text-sm">{{ error }}</p>
+        </div>
+
+        <!-- Hall Name -->
+        <div class="space-y-2">
+          <label for="hall_name" class="block text-sm font-semibold text-gray-700">Hall Name *</label>
+          <input
+            id="hall_name"
+            type="text"
+            [(ngModel)]="form.hall_name"
+            name="hall_name"
+            placeholder="e.g., Grand Ballroom"
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+
+        <!-- Location -->
+        <div class="space-y-2">
+          <label for="location" class="block text-sm font-semibold text-gray-700">Location *</label>
+          <input
+            id="location"
+            type="text"
+            [(ngModel)]="form.location"
+            name="location"
+            placeholder="e.g., Downtown, Doha"
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+
+        <!-- Capacity and Price Row -->
+        <div class="grid grid-cols-2 gap-4">
+          <!-- Capacity -->
+          <div class="space-y-2">
+            <label for="capacity" class="block text-sm font-semibold text-gray-700">Capacity *</label>
+            <input
+              id="capacity"
+              type="number"
+              [(ngModel)]="form.capacity"
+              name="capacity"
+              placeholder="e.g., 500"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+          </div>
+
+          <!-- Base Price -->
+          <div class="space-y-2">
+            <label for="base_price" class="block text-sm font-semibold text-gray-700">Base Price (QAR) *</label>
+            <input
+              id="base_price"
+              type="number"
+              [(ngModel)]="form.base_price"
+              name="base_price"
+              placeholder="e.g., 5000"
+              class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            />
+          </div>
+        </div>
+
+        <!-- Commission Percent -->
+        <div class="space-y-2">
+          <label for="commission_percent" class="block text-sm font-semibold text-gray-700">Commission Percent (%)</label>
+          <input
+            id="commission_percent"
+            type="number"
+            [(ngModel)]="form.commission_percent"
+            name="commission_percent"
+            placeholder="e.g., 10"
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="space-y-2">
+          <label for="description" class="block text-sm font-semibold text-gray-700">Description</label>
+          <textarea
+            id="description"
+            [(ngModel)]="form.description"
+            name="description"
+            placeholder="Add details about your hall..."
+            rows="4"
+            class="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+          ></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex gap-4 pt-6">
+          <button
+            type="submit"
+            [disabled]="loading"
+            class="flex-1 px-4 py-3 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition disabled:opacity-50"
+          >
+            {{ loading ? 'Saving...' : 'Save Changes' }}
+          </button>
+          <button
+            type="button"
+            (click)="goBack()"
+            class="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-700 font-semibold rounded-lg hover:bg-gray-50 transition"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
