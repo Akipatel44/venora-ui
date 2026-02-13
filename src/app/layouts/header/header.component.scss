@@ -12,10 +12,11 @@ header {
 }
 
 .popover-card {
-  width: 260px;
-  background: #fff;
+  width: 290px;
+  background: #1f2937;
+  border: 1px solid #374151;
   border-radius: 12px;
-  box-shadow: 0 12px 30px rgba(16, 24, 40, 0.08);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -23,10 +24,35 @@ header {
 }
 
 .popover-logout {
-  background: linear-gradient(180deg, #a74457 0%, #8f1739 100%);
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
   color: #fff;
   border: none;
   border-radius: 10px;
-  padding: 8px 10px;
-  font-weight: 700;
+  padding: 10px 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
 }
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: slideInFromTop 0.2s ease-out;
+}
+
