@@ -12,7 +12,6 @@ export class HeaderComponent {
   @Input() sidebarCollapsed = false;
   @Output() mobileMenuToggle = new EventEmitter<void>();
   @Output() sidebarToggle = new EventEmitter<void>();
-  @Output() languageChange = new EventEmitter<'en' | 'ar'>();
   @Output() logout = new EventEmitter<void>();
 
   unreadCount = 0;
