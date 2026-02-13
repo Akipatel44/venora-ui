@@ -39,17 +39,18 @@ export class HallDirectoryComponent implements OnInit {
   loadApprovedHalls(): void {
     this.loading = true;
     this.error = null;
-    this.hallService.getAllHalls().subscribe(
-      (data: any[]) => {
+    this.hallService.getAllHalls().subscribe({
+      next: (data: any[]) => {
+        console.log('Halls loaded:', data);
         this.approvedHalls = data.filter(hall => hall.status === 'approved');
         this.loading = false;
       },
-      (err: any) => {
-        this.error = 'Failed to load halls. Please try again later.';
+      error: (err: any) => {
+        console.error('Error loading halls:', err);
+        this.error = err?.error?.detail || 'Failed to load halls. Please try again later.';
         this.loading = false;
-        console.error(err);
       }
-    );
+    });
   }
 
   viewDetails(hallId: number): void {

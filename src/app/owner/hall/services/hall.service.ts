@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HallService {
-  private apiUrl = '/api/halls';
+  private apiUrl = '/api/halls/';
 
   constructor(private http: HttpClient) {}
 
@@ -23,7 +23,7 @@ export class HallService {
   }
 
   getMyHalls(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/my-halls`, { headers: this.getHeaders() });
+    return this.http.get<any[]>(`${this.apiUrl}my-halls`, { headers: this.getHeaders() });
   }
 
   getAllHalls(): Observable<any[]> {
@@ -31,19 +31,19 @@ export class HallService {
   }
 
   getHallById(id: number): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+    return this.http.get<any>(`${this.apiUrl}${id}`, { headers: this.getHeaders() });
   }
 
   updateHall(id: number, data: any): Observable<any> {
-    return this.http.put<any>(`${this.apiUrl}/${id}`, data, { headers: this.getHeaders() });
+    return this.http.put<any>(`${this.apiUrl}${id}`, data, { headers: this.getHeaders() });
   }
 
   updateHallStatus(id: number, status: string): Observable<any> {
     const payload = { status };
-    return this.http.patch<any>(`${this.apiUrl}/${id}/status`, payload, { headers: this.getHeaders() });
+    return this.http.patch<any>(`${this.apiUrl}${id}/status`, payload, { headers: this.getHeaders() });
   }
 
   deleteHall(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() });
+    return this.http.delete<void>(`${this.apiUrl}${id}`, { headers: this.getHeaders() });
   }
 }
