@@ -65,6 +65,10 @@ export class HallListComponent implements OnInit {
     this.router.navigate(['/owner/halls/create']);
   }
 
+  viewHall(id: number) {
+    this.router.navigate(['/owner/halls', id]);
+  }
+
   editHall(id: number) {
     this.router.navigate(['/owner/halls/edit', id]);
   }

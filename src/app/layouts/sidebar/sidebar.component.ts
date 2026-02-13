@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 interface MenuItem {
   id: string;
@@ -17,7 +17,7 @@ interface MenuItem {
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
   @Input() isMobileMenuOpen = false;
   @Input() isCollapsed = false;
   @Output() mobileMenuToggle = new EventEmitter<void>();
@@ -31,7 +31,11 @@ export class SidebarComponent {
   tooltipLabel = '';
   isLockedTooltip = false;
 
-  mainMenuItems: MenuItem[] = [
+  mainMenuItems: MenuItem[] = [];
+  private isOwnerRoute = false;
+
+  // Admin menu items
+  private adminMenuItems: MenuItem[] = [
     {
       id: 'dashboard',
       label: 'Dashboard',
@@ -52,6 +56,22 @@ export class SidebarComponent {
     },
   ];
 
+  // Owner menu items
+  private ownerMenuItems: MenuItem[] = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      route: '/owner',
+      icon: 'icon-dashboard',
+    },
+    {
+      id: 'my-halls',
+      label: 'My Halls',
+      route: '/owner/halls',
+      icon: 'icon-building',
+    },
+  ];
+
   settingsMenuItems: MenuItem[] = [
     {
       id: 'settings',
@@ -60,6 +80,22 @@ export class SidebarComponent {
       icon: 'icon-settings',
     },
   ];
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    // Detect if current route is owner or admin
+    this.isOwnerRoute = this.router.url.includes('/owner');
+    this.setMenuItems();
+  }
+
+  setMenuItems() {
+    if (this.isOwnerRoute) {
+      this.mainMenuItems = this.ownerMenuItems;
+    } else {
+      this.mainMenuItems = this.adminMenuItems;
+    }
+  }
 
   toggleSidebar() {
     this.shouldCollapse.set(!this.shouldCollapse());

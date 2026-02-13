@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -39,6 +39,7 @@ export class HallDetailComponent implements OnInit {
   constructor(
     private hallService: HallService,
     private route: ActivatedRoute,
+    private router: Router,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -149,6 +150,10 @@ export class HallDetailComponent implements OnInit {
 
   editServicePrice(service: any) {
     // API call will be added here
+  }
+
+  editHall() {
+    this.router.navigate(['/owner/halls/edit', this.hall.hall_id]);
   }
 }
 
