@@ -1,0 +1,373 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 py-8 px-4">
+  <div class="max-w-6xl mx-auto">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="bg-gray-800/50 backdrop-blur rounded-2xl border border-gray-700 p-12 text-center">
+      <div class="flex justify-center items-center gap-2 mb-4">
+        <div class="w-3 h-3 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0s"></div>
+        <div class="w-3 h-3 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+        <div class="w-3 h-3 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+      </div>
+      <p class="text-gray-300 font-medium">Loading hall details...</p>
+    </div>
+
+    <!-- Error Alert -->
+    <div *ngIf="error && !loading" class="mb-6 bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+      <div class="flex items-start">
+        <svg class="w-5 h-5 text-red-400 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <p class="text-red-300 text-sm">{{ error }}</p>
+      </div>
+    </div>
+
+    <!-- Hall Detail -->
+    <div *ngIf="hall && !loading" class="space-y-6">
+      <!-- Hall Info Header -->
+      <div class="bg-gradient-to-r from-gray-800 to-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <h1 class="text-4xl font-bold text-white mb-2">{{ hall.hall_name }}</h1>
+            <div class="flex items-center gap-4 text-gray-300">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"></path>
+                </svg>
+                {{ hall.location }}
+              </div>
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"></path>
+                </svg>
+                {{ hall.capacity }} guests
+              </div>
+            </div>
+          </div>
+          <div class="text-right">
+            <p class="text-sm text-gray-400 mb-1">Base Price</p>
+            <p class="text-3xl font-bold text-primary-400">₹ {{ hall.base_price | number:'1.0-0' }}</p>
+          </div>
+        </div>
+        <div class="mt-6 pt-6 border-t border-gray-700">
+          <span
+            [ngClass]="{
+              'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30': hall.status === 'pending',
+              'bg-green-500/20 text-green-300 border border-green-500/30': hall.status === 'approved',
+              'bg-red-500/20 text-red-300 border border-red-500/30': hall.status === 'blocked'
+            }"
+            class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold capitalize"
+          >
+            <span
+              [ngClass]="{
+                'bg-yellow-500': hall.status === 'pending',
+                'bg-green-500': hall.status === 'approved',
+                'bg-red-500': hall.status === 'blocked'
+              }"
+              class="w-1.5 h-1.5 rounded-full mr-2"
+            ></span>
+            {{ hall.status }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="bg-gradient-to-r from-gray-800 to-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl overflow-hidden">
+        <div class="flex border-b border-gray-700 bg-gray-900/50">
+          <button
+            (click)="setActiveTab('overview')"
+            [ngClass]="activeTab === 'overview' ? 'bg-primary-500/20 text-primary-400 border-b-2 border-primary-500' : 'text-gray-400 hover:text-white'"
+            class="flex-1 px-6 py-4 font-semibold transition duration-200 border-b-2 border-transparent"
+          >
+            <div class="flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Overview
+            </div>
+          </button>
+          <button
+            (click)="setActiveTab('amenities')"
+            [ngClass]="activeTab === 'amenities' ? 'bg-primary-500/20 text-primary-400 border-b-2 border-primary-500' : 'text-gray-400 hover:text-white'"
+            class="flex-1 px-6 py-4 font-semibold transition duration-200 border-b-2 border-transparent"
+          >
+            <div class="flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+              </svg>
+              Amenities
+            </div>
+          </button>
+          <button
+            (click)="setActiveTab('services')"
+            [ngClass]="activeTab === 'services' ? 'bg-primary-500/20 text-primary-400 border-b-2 border-primary-500' : 'text-gray-400 hover:text-white'"
+            class="flex-1 px-6 py-4 font-semibold transition duration-200 border-b-2 border-transparent"
+          >
+            <div class="flex items-center justify-center gap-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+              </svg>
+              Services
+            </div>
+          </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="p-6">
+          <!-- Overview Tab -->
+          <div *ngIf="activeTab === 'overview'" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p class="text-sm text-gray-400 mb-2">Description</p>
+                <p class="text-gray-300">{{ hall.description || 'No description provided' }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-400 mb-2">Commission</p>
+                <p class="text-gray-300">{{ hall.commission_percent || 'N/A' }}%</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-400 mb-2">Created</p>
+                <p class="text-gray-300">{{ hall.created_at | date:'medium' }}</p>
+              </div>
+              <div>
+                <p class="text-sm text-gray-400 mb-2">Hall ID</p>
+                <p class="text-gray-300">{{ hall.hall_id }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Amenities Tab -->
+          <div *ngIf="activeTab === 'amenities'" class="space-y-4">
+            <!-- Header with Add Button -->
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="text-xl font-semibold text-white">Hall Amenities</h3>
+              <button
+                (click)="openAddAmenityModal()"
+                type="button"
+                class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-lg hover:from-primary-700 hover:to-primary-800 transition transform hover:scale-105"
+              >
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Add Amenity
+              </button>
+            </div>
+
+            <!-- Error Alert -->
+            <div *ngIf="amenityError" class="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
+              <p class="text-red-300 text-sm">{{ amenityError }}</p>
+            </div>
+
+            <!-- Loading State -->
+            <div *ngIf="amenityLoading" class="bg-gray-800/50 backdrop-blur rounded-2xl border border-gray-700 p-8 text-center">
+              <div class="flex justify-center items-center gap-2 mb-4">
+                <div class="w-3 h-3 bg-primary-500 rounded-full animate-bounce"></div>
+                <div class="w-3 h-3 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                <div class="w-3 h-3 bg-primary-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+              </div>
+              <p class="text-gray-300">Loading amenities...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div *ngIf="!amenityLoading && hallAmenities.length === 0" class="bg-gradient-to-br from-gray-800 to-gray-800/50 backdrop-blur rounded-2xl border border-gray-700 p-8 text-center">
+              <svg class="w-12 h-12 text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m0 0h6m-6 0v6m0-6h-6m0 0v6"></path>
+              </svg>
+              <p class="text-gray-400 mb-4">No amenities added to this hall yet</p>
+              <button
+                (click)="openAddAmenityModal()"
+                class="inline-flex items-center px-4 py-2 bg-primary-600 text-white font-semibold rounded-lg hover:bg-primary-700 transition"
+              >
+                Add First Amenity
+              </button>
+            </div>
+
+            <!-- Amenities Table -->
+            <div *ngIf="!amenityLoading && hallAmenities.length > 0" class="bg-gray-800/50 backdrop-blur border border-gray-700 rounded-2xl overflow-hidden">
+              <div class="overflow-x-auto hidden sm:block">
+                <table class="w-full">
+                  <thead>
+                    <tr class="bg-gray-900/50 border-b border-gray-700">
+                      <th class="px-6 py-4 text-left text-sm font-semibold text-gray-200">Amenity Name</th>
+                      <th class="px-6 py-4 text-left text-sm font-semibold text-gray-200">Chargeable</th>
+                      <th class="px-6 py-4 text-left text-sm font-semibold text-gray-200">Base Price</th>
+                      <th class="px-6 py-4 text-left text-sm font-semibold text-gray-200">Custom Price</th>
+                      <th class="px-6 py-4 text-right text-sm font-semibold text-gray-200">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-gray-700">
+                    <tr *ngFor="let amenity of hallAmenities" class="hover:bg-gray-700/30 transition duration-150">
+                      <td class="px-6 py-4 text-sm">
+                        <span class="font-semibold text-white">{{ amenity.amenity_name }}</span>
+                      </td>
+                      <td class="px-6 py-4 text-sm">
+                        <span
+                          [ngClass]="amenity.is_chargeable ? 'bg-green-500/20 text-green-300' : 'bg-gray-500/20 text-gray-300'"
+                          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-semibold"
+                        >
+                          {{ amenity.is_chargeable ? 'Yes' : 'No' }}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-300">
+                        <span class="font-semibold text-primary-400">₹ {{ amenity.base_price | number:'1.0-0' }}</span>
+                      </td>
+                      <td class="px-6 py-4 text-sm text-gray-300">
+                        <span class="font-semibold">₹ {{ amenity.custom_price || amenity.base_price | number:'1.0-0' }}</span>
+                      </td>
+                      <td class="px-6 py-4 text-right text-sm">
+                        <div class="flex items-center justify-end gap-2">
+                          <button
+                            (click)="editAmenityPrice(amenity)"
+                            type="button"
+                            class="inline-flex items-center px-3 py-2 rounded-lg bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 transition border border-blue-500/30 hover:border-blue-500/50"
+                            title="Edit price"
+                          >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                            </svg>
+                          </button>
+                          <button
+                            (click)="removeAmenity(amenity.id)"
+                            type="button"
+                            class="inline-flex items-center px-3 py-2 rounded-lg bg-red-500/10 text-red-300 hover:bg-red-500/20 transition border border-red-500/30 hover:border-red-500/50"
+                            title="Remove amenity"
+                          >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Mobile Cards -->
+              <div class="block sm:hidden p-4 space-y-4">
+                <div *ngFor="let amenity of hallAmenities" class="bg-gray-700/50 rounded-xl border border-gray-600 p-4 space-y-3">
+                  <div class="flex items-start justify-between gap-2">
+                    <div>
+                      <h4 class="font-semibold text-white">{{ amenity.amenity_name }}</h4>
+                      <span
+                        [ngClass]="amenity.is_chargeable ? 'bg-green-500/20 text-green-300' : 'bg-gray-500/20 text-gray-300'"
+                        class="inline-flex items-center px-2 py-1 rounded text-xs font-semibold mt-2"
+                      >
+                        {{ amenity.is_chargeable ? 'Chargeable' : 'Complimentary' }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-4 py-3 border-y border-gray-600">
+                    <div>
+                      <p class="text-xs text-gray-400">Base Price</p>
+                      <p class="text-sm font-semibold text-primary-400">₹ {{ amenity.base_price | number:'1.0-0' }}</p>
+                    </div>
+                    <div>
+                      <p class="text-xs text-gray-400">Custom Price</p>
+                      <p class="text-sm font-semibold text-white">₹ {{ amenity.custom_price || amenity.base_price | number:'1.0-0' }}</p>
+                    </div>
+                  </div>
+
+                  <div class="flex gap-2">
+                    <button
+                      (click)="editAmenityPrice(amenity)"
+                      class="flex-1 px-3 py-2 text-sm rounded-lg bg-blue-500/10 text-blue-300 hover:bg-blue-500/20 transition border border-blue-500/30"
+                    >
+                      Edit Price
+                    </button>
+                    <button
+                      (click)="removeAmenity(amenity.id)"
+                      class="flex-1 px-3 py-2 text-sm rounded-lg bg-red-500/10 text-red-300 hover:bg-red-500/20 transition border border-red-500/30"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Services Tab -->
+          <div *ngIf="activeTab === 'services'" class="space-y-4">
+            <div class="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
+              <p class="text-blue-300 text-sm">Services management coming soon...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Amenity Modal -->
+<div *ngIf="showAddAmenityModal" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" (click)="$event.target === $event.currentTarget && closeAddAmenityModal()">
+  <div class="bg-gray-800 border border-gray-700 rounded-2xl shadow-2xl max-w-md w-full">
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-gray-900 to-gray-800 border-b border-gray-700 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-xl font-semibold text-white">Add Amenity to Hall</h3>
+      <button
+        (click)="closeAddAmenityModal()"
+        type="button"
+        class="p-1 text-gray-400 hover:text-white transition"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="p-6 space-y-4">
+      <!-- Error Alert -->
+      <div *ngIf="amenityError" class="bg-red-500/10 border border-red-500/30 rounded-lg p-3">
+        <p class="text-red-300 text-sm">{{ amenityError }}</p>
+      </div>
+
+      <!-- Amenity Dropdown -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-300 mb-2">Select Amenity</label>
+        <select
+          [(ngModel)]="selectedAmenityId"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:border-primary-500 focus:outline-none transition"
+        >
+          <option value="">-- Choose an amenity --</option>
+          <option *ngFor="let amenity of amenities" [value]="amenity.amenity_id">
+            {{ amenity.amenity_name }}
+            <span *ngIf="amenity.is_chargeable"> (₹{{ amenity.base_price | number:'1.0-0' }})</span>
+          </option>
+        </select>
+      </div>
+
+      <!-- Custom Price Input -->
+      <div>
+        <label class="block text-sm font-semibold text-gray-300 mb-2">Custom Price (Optional)</label>
+        <input
+          type="number"
+          [(ngModel)]="customPrice"
+          placeholder="Leave empty to use base price"
+          step="0.01"
+          min="0"
+          class="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:border-primary-500 focus:outline-none transition"
+        />
+        <p class="text-xs text-gray-400 mt-1">Leave empty to use the amenity's base price</p>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="bg-gray-900/50 border-t border-gray-700 px-6 py-4 flex gap-3">
+      <button
+        (click)="closeAddAmenityModal()"
+        type="button"
+        class="flex-1 px-4 py-2 bg-gray-700 text-gray-300 font-semibold rounded-lg hover:bg-gray-600 transition"
+      >
+        Cancel
+      </button>
+      <button
+        (click)="saveAmenity()"
+        type="button"
+        class="flex-1 px-4 py-2 bg-gradient-to-r from-primary-600 to-primary-700 text-white font-semibold rounded-lg hover:from-primary-700 hover:to-primary-800 transition"
+      >
+        Add Amenity
+      </button>
+    </div>
+  </div>
+</div>
