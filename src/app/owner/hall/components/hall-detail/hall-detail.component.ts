@@ -27,6 +27,15 @@ export class HallDetailComponent implements OnInit {
   amenityLoading = false;
   amenityError: string | null = null;
 
+  // Services management
+  showAddServiceModal = false;
+  services: any[] = [];
+  hallServices: any[] = [];
+  selectedServiceId: number | null = null;
+  serviceCustomPrice: number | null = null;
+  serviceLoading = false;
+  serviceError: string | null = null;
+
   constructor(
     private hallService: HallService,
     private route: ActivatedRoute,
@@ -63,12 +72,20 @@ export class HallDetailComponent implements OnInit {
     this.activeTab = tab;
     if (tab === 'amenities') {
       this.loadAmenities();
+    } else if (tab === 'services') {
+      this.loadServices();
     }
   }
 
   loadAmenities() {
     this.amenityLoading = true;
     this.amenityError = null;
+    // API calls will be added here
+  }
+
+  loadServices() {
+    this.serviceLoading = true;
+    this.serviceError = null;
     // API calls will be added here
   }
 
@@ -101,4 +118,37 @@ export class HallDetailComponent implements OnInit {
   editAmenityPrice(amenity: any) {
     // API call will be added here
   }
+
+  // Service methods
+  openAddServiceModal() {
+    this.showAddServiceModal = true;
+  }
+
+  closeAddServiceModal() {
+    this.showAddServiceModal = false;
+    this.selectedServiceId = null;
+    this.serviceCustomPrice = null;
+  }
+
+  saveService() {
+    if (!this.selectedServiceId) {
+      this.serviceError = 'Please select a service';
+      return;
+    }
+
+    // API call will be added here
+    // this.hallService.addServiceToHall(this.hallId, this.selectedServiceId, this.serviceCustomPrice).subscribe(...)
+  }
+
+  removeService(serviceId: number) {
+    if (confirm('Are you sure you want to remove this service?')) {
+      // API call will be added here
+      // this.hallService.removeServiceFromHall(this.hallId, serviceId).subscribe(...)
+    }
+  }
+
+  editServicePrice(service: any) {
+    // API call will be added here
+  }
 }
+
