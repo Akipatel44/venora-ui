@@ -8,11 +8,12 @@
   <div class="flex flex-1">
     <app-sidebar
       [isMobileMenuOpen]="mobileMenuOpen"
+      [isCollapsed]="sidebarCollapsed"
       (sidebarToggle)="onSidebarToggle($event)"
       (mobileMenuToggle)="onMobileMenuToggle()"
       (mobileMenuClose)="onMobileMenuClose()"
     ></app-sidebar>
-    <main class="flex-1 p-6 overflow-auto bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+    <main class="flex-1 p-6 overflow-auto bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 lg:ml-64">
       <router-outlet></router-outlet>
     </main>
   </div>

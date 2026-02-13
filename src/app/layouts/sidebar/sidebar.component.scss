@@ -1,7 +1,150 @@
+// Sidebar base styling
 aside {
   background: #0f172a; /* primary-900 */
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
-aside a:hover {
-  background: rgba(255,255,255,0.06);
+// Smooth transitions
+aside {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// Active menu item styling
+.active-menu-item {
+  background-color: rgba(79, 70, 229, 0.3) !important;
+  border-left: 3px solid #22d3ee !important;
+  padding-left: calc(12px - 3px) !important;
+  color: #e5e7eb !important;
+
+  svg {
+    color: #22d3ee !important;
+  }
+
+  span {
+    color: #e5e7eb !important;
+    font-weight: 500;
+  }
+
+  &:hover {
+    background-color: rgba(79, 70, 229, 0.4) !important;
+  }
+}
+
+// Scrollbar styling for sidebar
+.sidebar-scroll {
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}
+
+// Menu items hover and active states
+aside a {
+  position: relative;
+  transition: all 0.2s ease;
+
+  &:hover {
+    svg {
+      transform: scale(1.05);
+    }
+  }
+}
+
+// Icon transitions
+aside svg {
+  transition: all 0.2s ease;
+}
+
+// Logo section border
+aside > div:first-child {
+  border-bottom: 1px solid rgba(79, 70, 229, 0.3);
+}
+
+// Settings section border
+aside > div:last-child {
+  border-top: 1px solid rgba(79, 70, 229, 0.3);
+}
+
+// Mobile menu animations
+aside {
+  will-change: transform;
+
+  @media (max-width: 1024px) {
+    &.-translate-x-full {
+      transform: translateX(-100%);
+    }
+
+    &.translate-x-0 {
+      transform: translateX(0);
+    }
+  }
+}
+
+// Tooltip styling
+.fixed.bg-gray-900.text-white.rounded-lg {
+  animation: slideInRight 0.2s ease-out;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Collapse button animation
+button[title*="Collapse"],
+button[title*="Expand"] {
+  animation: popIn 0.3s ease-out;
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover svg {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Label hover effect
+.sidebar-label-hover {
+  transition: all 0.2s ease;
+}
+
+// Responsive adjustments
+@media (max-width: 1024px) {
+  aside {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  }
 }
