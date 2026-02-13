@@ -13,8 +13,10 @@ const routes: Routes = [
   // lazy-loaded module placeholders
   { path: 'auth', loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule) },
   { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule) },
+  { path: 'superadmin', loadChildren: () => import('./superadmin/superadmin.module').then(m => m.SuperadminModule) },
   { path: 'owner', loadChildren: () => import('./owner/owner.module').then(m => m.OwnerModule) },
   { path: 'customer', loadChildren: () => import('./customer/customer.module').then(m => m.CustomerModule) },
+  { path: 'public', loadChildren: () => import('./public/public.module').then(m => m.PublicModule) },
   { path: '', pathMatch: 'full', redirectTo: 'auth' }
 ];
 
