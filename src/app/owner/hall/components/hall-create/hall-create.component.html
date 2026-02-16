@@ -149,6 +149,105 @@
           <p class="text-xs text-gray-500">Add details that will help customers understand what your hall offers</p>
         </div>
 
+        <!-- Amenities Section -->
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-semibold text-gray-900 mb-1">
+              Amenities
+              <span class="text-gray-400 text-xs">(Optional)</span>
+            </label>
+            <p class="text-xs text-gray-500 mb-4">Select amenities available at your hall. You can set custom prices for chargeable amenities.</p>
+          </div>
+
+          <!-- Loading -->
+          <div *ngIf="amenityLoading" class="flex items-center gap-2 text-gray-400 text-sm py-4">
+            <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading amenities...
+          </div>
+
+          <!-- No amenities available -->
+          <div *ngIf="!amenityLoading && availableAmenities.length === 0" class="bg-gray-50 border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
+            <svg class="w-10 h-10 text-gray-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+            </svg>
+            <p class="text-gray-400 text-sm">No amenities available yet. You can add them later from the hall details page.</p>
+          </div>
+
+          <!-- Amenities Grid -->
+          <div *ngIf="!amenityLoading && availableAmenities.length > 0" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div
+              *ngFor="let amenity of availableAmenities"
+              (click)="toggleAmenity(amenity)"
+              class="relative border-2 rounded-xl p-4 cursor-pointer transition-all duration-200"
+              [ngClass]="{
+                'border-primary-500 bg-primary-50 ring-1 ring-primary-500': isAmenitySelected(amenity.amenity_id),
+                'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50': !isAmenitySelected(amenity.amenity_id)
+              }"
+            >
+              <!-- Checkbox indicator -->
+              <div class="flex items-start gap-3">
+                <div
+                  class="w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 mt-0.5 transition"
+                  [ngClass]="{
+                    'bg-primary-500 border-primary-500': isAmenitySelected(amenity.amenity_id),
+                    'border-gray-300 bg-white': !isAmenitySelected(amenity.amenity_id)
+                  }"
+                >
+                  <svg *ngIf="isAmenitySelected(amenity.amenity_id)" class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="font-semibold text-gray-900 text-sm">{{ amenity.amenity_name }}</p>
+                  <div class="flex items-center gap-2 mt-1">
+                    <span
+                      [ngClass]="amenity.is_chargeable ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'"
+                      class="text-xs px-2 py-0.5 rounded-full font-medium"
+                    >
+                      {{ amenity.is_chargeable ? 'Chargeable' : 'Complimentary' }}
+                    </span>
+                    <span *ngIf="amenity.is_chargeable && amenity.base_price" class="text-xs text-gray-500">
+                      Base: ₹{{ amenity.base_price | number:'1.0-0' }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Custom price input for chargeable amenities -->
+              <div
+                *ngIf="isAmenitySelected(amenity.amenity_id) && amenity.is_chargeable"
+                class="mt-3 ml-8"
+                (click)="$event.stopPropagation()"
+              >
+                <label class="text-xs text-gray-500 mb-1 block">Custom Price (optional)</label>
+                <div class="relative">
+                  <span class="absolute left-3 top-2 text-gray-400 text-xs">₹</span>
+                  <input
+                    type="number"
+                    [ngModel]="getSelectedAmenity(amenity.amenity_id)?.custom_price"
+                    (ngModelChange)="getSelectedAmenity(amenity.amenity_id)!.custom_price = $event"
+                    [name]="'amenity_price_' + amenity.amenity_id"
+                    placeholder="Use base price"
+                    min="0"
+                    step="0.01"
+                    class="w-full pl-8 pr-3 py-1.5 text-sm bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-primary-500 transition"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Selected count -->
+          <div *ngIf="selectedAmenities.length > 0" class="bg-primary-50 border border-primary-200 rounded-lg px-4 py-2">
+            <p class="text-sm text-primary-700 font-medium">
+              {{ selectedAmenities.length }} amenit{{ selectedAmenities.length === 1 ? 'y' : 'ies' }} selected
+            </p>
+          </div>
+        </div>
+
         <!-- Form Actions -->
         <div class="flex gap-4 pt-8 border-t border-gray-200">
           <button

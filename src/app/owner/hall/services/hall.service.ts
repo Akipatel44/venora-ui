@@ -7,6 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class HallService {
   private apiUrl = '/api/halls/';
+  private amenityUrl = '/api/amenities/';
+  private serviceUrl = '/api/services/';
 
   constructor(private http: HttpClient) {}
 
@@ -21,6 +23,7 @@ export class HallService {
     return headers;
   }
 
+  // Hall methods
   createHall(data: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, data, { headers: this.getHeaders() });
   }
@@ -48,5 +51,51 @@ export class HallService {
 
   deleteHall(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}${id}`, { headers: this.getHeaders() });
+  }
+
+  // Amenity methods
+  getAllAmenities(): Observable<any[]> {
+    return this.http.get<any[]>(this.amenityUrl, { headers: this.getHeaders() });
+  }
+
+  getHallAmenities(hallId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.amenityUrl}hall/${hallId}`, { headers: this.getHeaders() });
+  }
+
+  addAmenityToHall(hallId: number, amenityId: number, customPrice?: number): Observable<any> {
+    const payload: any = { hall_id: hallId, amenity_id: amenityId };
+    if (customPrice != null) payload.custom_price = customPrice;
+    return this.http.post<any>(`${this.amenityUrl}hall/${hallId}`, payload, { headers: this.getHeaders() });
+  }
+
+  removeAmenityFromHall(amenityLinkId: number): Observable<any> {
+    return this.http.delete<any>(`${this.amenityUrl}hall/${amenityLinkId}`, { headers: this.getHeaders() });
+  }
+
+  updateAmenityPrice(amenityLinkId: number, customPrice: number): Observable<any> {
+    return this.http.put<any>(`${this.amenityUrl}hall/${amenityLinkId}/price`, { custom_price: customPrice }, { headers: this.getHeaders() });
+  }
+
+  // Service methods (parallel to amenities)
+  getAllServices(): Observable<any[]> {
+    return this.http.get<any[]>(this.serviceUrl, { headers: this.getHeaders() });
+  }
+
+  getHallServices(hallId: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.serviceUrl}hall/${hallId}`, { headers: this.getHeaders() });
+  }
+
+  addServiceToHall(hallId: number, serviceId: number, customPrice?: number): Observable<any> {
+    const payload: any = { hall_id: hallId, service_id: serviceId };
+    if (customPrice != null) payload.custom_price = customPrice;
+    return this.http.post<any>(`${this.serviceUrl}hall/${hallId}`, payload, { headers: this.getHeaders() });
+  }
+
+  removeServiceFromHall(serviceLinkId: number): Observable<any> {
+    return this.http.delete<any>(`${this.serviceUrl}hall/${serviceLinkId}`, { headers: this.getHeaders() });
+  }
+
+  updateServicePrice(serviceLinkId: number, customPrice: number): Observable<any> {
+    return this.http.put<any>(`${this.serviceUrl}hall/${serviceLinkId}/price`, { custom_price: customPrice }, { headers: this.getHeaders() });
   }
 }

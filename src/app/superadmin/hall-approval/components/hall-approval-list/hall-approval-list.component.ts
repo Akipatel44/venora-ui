@@ -127,8 +127,12 @@ export class HallApprovalListComponent implements OnInit {
     return this.halls.filter(hall => hall.status === 'pending');
   }
 
+  viewHall(id: number): void {
+    this.router.navigate(['/owner/halls', id]);
+  }
+
   editHall(id: number): void {
-    this.router.navigate(['/admin/halls/edit', id]);
+    this.router.navigate(['/owner/halls/edit', id]);
   }
 
   deleteHall(id: number): void {
