@@ -116,6 +116,7 @@ export class HallCreateComponent implements OnInit {
         if (this.selectedAmenities.length > 0 && hall?.hall_id) {
           this.addAmenitiesToHall(hall.hall_id);
         } else {
+          this.loading = false;
           this.router.navigate(['/owner/halls']);
         }
       },
@@ -127,20 +128,28 @@ export class HallCreateComponent implements OnInit {
   }
 
   addAmenitiesToHall(hallId: number) {
-    let completed = 0;
     const total = this.selectedAmenities.length;
+    let completed = 0;
+    let failures = 0;
 
     this.selectedAmenities.forEach(amenity => {
       this.hallService.addAmenityToHall(hallId, amenity.amenity_id, amenity.custom_price || undefined).subscribe({
         next: () => {
           completed++;
-          if (completed === total) {
+          if (completed + failures === total) {
+            this.loading = false;
+            if (failures > 0) {
+              this.error = `${failures} amenity(ies) failed to add. Please review.`;
+            }
             this.router.navigate(['/owner/halls']);
           }
         },
-        error: () => {
+        error: (err: any) => {
+          failures++;
           completed++;
-          if (completed === total) {
+          if (completed + failures === total) {
+            this.loading = false;
+            this.error = `${failures} amenity(ies) failed to add. Please review.`;
             this.router.navigate(['/owner/halls']);
           }
         }

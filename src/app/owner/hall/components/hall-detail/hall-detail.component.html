@@ -218,10 +218,23 @@
                         </span>
                       </td>
                       <td class="px-6 py-4 text-sm text-gray-300">
-                        <span class="font-semibold text-primary-400">₹ {{ amenity.base_price | number:'1.0-0' }}</span>
+                        <ng-container *ngIf="amenity.is_chargeable; else complimentaryBase">
+                          <span *ngIf="amenity.base_price != null" class="font-semibold text-primary-400">₹ {{ amenity.base_price | number:'1.0-0' }}</span>
+                          <span *ngIf="amenity.base_price == null" class="text-gray-400">N/A</span>
+                        </ng-container>
+                        <ng-template #complimentaryBase>
+                          <span class="text-gray-400">—</span>
+                        </ng-template>
                       </td>
                       <td class="px-6 py-4 text-sm text-gray-300">
-                        <span class="font-semibold">₹ {{ amenity.custom_price || amenity.base_price | number:'1.0-0' }}</span>
+                        <ng-container *ngIf="amenity.is_chargeable; else complimentaryCustom">
+                          <span *ngIf="amenity.custom_price != null" class="font-semibold">₹ {{ amenity.custom_price | number:'1.0-0' }}</span>
+                          <span *ngIf="amenity.custom_price == null && amenity.base_price != null" class="font-semibold">₹ {{ amenity.base_price | number:'1.0-0' }}</span>
+                          <span *ngIf="amenity.custom_price == null && amenity.base_price == null" class="text-gray-400">N/A</span>
+                        </ng-container>
+                        <ng-template #complimentaryCustom>
+                          <span class="text-gray-400">—</span>
+                        </ng-template>
                       </td>
                       <td class="px-6 py-4 text-right text-sm">
                         <div class="flex items-center justify-end gap-2">
@@ -270,11 +283,24 @@
                   <div class="grid grid-cols-2 gap-4 py-3 border-y border-gray-600">
                     <div>
                       <p class="text-xs text-gray-400">Base Price</p>
-                      <p class="text-sm font-semibold text-primary-400">₹ {{ amenity.base_price | number:'1.0-0' }}</p>
+                      <ng-container *ngIf="amenity.is_chargeable; else mobileComplBase">
+                        <p class="text-sm font-semibold text-primary-400" *ngIf="amenity.base_price != null">₹ {{ amenity.base_price | number:'1.0-0' }}</p>
+                        <p class="text-sm text-gray-400" *ngIf="amenity.base_price == null">N/A</p>
+                      </ng-container>
+                      <ng-template #mobileComplBase>
+                        <p class="text-sm text-gray-400">—</p>
+                      </ng-template>
                     </div>
                     <div>
                       <p class="text-xs text-gray-400">Custom Price</p>
-                      <p class="text-sm font-semibold text-white">₹ {{ amenity.custom_price || amenity.base_price | number:'1.0-0' }}</p>
+                      <ng-container *ngIf="amenity.is_chargeable; else mobileComplCustom">
+                        <p class="text-sm font-semibold text-white" *ngIf="amenity.custom_price != null">₹ {{ amenity.custom_price | number:'1.0-0' }}</p>
+                        <p class="text-sm font-semibold text-white" *ngIf="amenity.custom_price == null && amenity.base_price != null">₹ {{ amenity.base_price | number:'1.0-0' }}</p>
+                        <p class="text-sm text-gray-400" *ngIf="amenity.custom_price == null && amenity.base_price == null">N/A</p>
+                      </ng-container>
+                      <ng-template #mobileComplCustom>
+                        <p class="text-sm text-gray-400">—</p>
+                      </ng-template>
                     </div>
                   </div>
 
@@ -295,6 +321,25 @@
                 </div>
               </div>
             </div>
+            <!-- Reusable Modals -->
+            <app-confirm-modal
+              [visible]="showConfirmModal"
+              [title]="confirmTitle"
+              [message]="confirmMessage"
+              confirmText="Remove"
+              cancelText="Cancel"
+              (confirm)="onConfirmRemove()"
+              (cancel)="onCancelRemove()"
+            ></app-confirm-modal>
+
+            <app-edit-price-modal
+              [visible]="showEditPriceModal"
+              [title]="'Edit Amenity Price'"
+              [subtitle]="pendingEditAmenity ? ('Amenity: ' + (pendingEditAmenity.amenity_name || '')) : null"
+              [initialPrice]="editInitialPrice"
+              (save)="onSaveEditPrice($event)"
+              (cancel)="onCancelEditPrice()"
+            ></app-edit-price-modal>
           </div>
 
           <!-- Services Tab -->

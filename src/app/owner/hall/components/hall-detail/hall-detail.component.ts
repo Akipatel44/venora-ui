@@ -4,11 +4,13 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { HallService } from '../../services/hall.service';
+import { ConfirmModalComponent } from '../../../../shared/components/confirm-modal/confirm-modal.component';
+import { EditPriceModalComponent } from '../../../../shared/components/edit-price-modal/edit-price-modal.component';
 
 @Component({
   selector: 'app-hall-detail',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule, ConfirmModalComponent, EditPriceModalComponent],
   templateUrl: './hall-detail.component.html',
   styleUrls: ['./hall-detail.component.scss']
 })
@@ -26,6 +28,15 @@ export class HallDetailComponent implements OnInit {
   customPrice: number | null = null;
   amenityLoading = false;
   amenityError: string | null = null;
+  // modal states
+  showConfirmModal = false;
+  confirmTitle = '';
+  confirmMessage = '';
+  pendingRemoveAmenity: any = null;
+
+  showEditPriceModal = false;
+  pendingEditAmenity: any = null;
+  editInitialPrice: number | null = null;
 
   // Services management
   showAddServiceModal = false;
@@ -105,9 +116,10 @@ export class HallDetailComponent implements OnInit {
                 amenity_name: a.amenity_name ?? a.name ?? a.amenity?.amenity_name,
                 is_chargeable: a.is_chargeable ?? a.is_chargeable ?? (a.amenity?.is_chargeable ?? false),
                 base_price: a.base_price ?? (a.amenity?.base_price ?? null),
-                custom_price: a.custom_price ?? a.custom_price ?? null
+                custom_price: a.custom_price ?? a.custom_price ?? null,
+                is_active: typeof a.is_active !== 'undefined' ? a.is_active : true,
               };
-            });
+            }).filter(x => x.is_active);
             this.amenityLoading = false;
             this.cdr.markForCheck();
           },
@@ -210,44 +222,69 @@ export class HallDetailComponent implements OnInit {
   }
 
   removeAmenity(amenityId: number) {
-    if (confirm('Are you sure you want to remove this amenity?')) {
-      this.amenityLoading = true;
-      this.amenityError = null;
-      this.hallService.removeAmenityFromHall(amenityId).subscribe({
-        next: () => {
-          this.loadAmenities();
-        },
-        error: (err: any) => {
-          this.amenityError = err?.error?.detail || 'Failed to remove amenity';
-          this.amenityLoading = false;
-          this.cdr.markForCheck();
-        }
-      });
-    }
+    const amen = this.hallAmenities.find(a => a.id === amenityId) || { id: amenityId };
+    this.pendingRemoveAmenity = amen;
+    this.confirmTitle = 'Remove Amenity';
+    this.confirmMessage = `Remove "${amen.amenity_name || 'this amenity'}" from this hall?`;
+    this.showConfirmModal = true;
+  }
+
+  onConfirmRemove() {
+    if (!this.pendingRemoveAmenity) return;
+    this.amenityLoading = true;
+    this.amenityError = null;
+    const id = this.pendingRemoveAmenity.id;
+    this.hallService.removeAmenityFromHall(id).subscribe({
+      next: () => {
+        this.showConfirmModal = false;
+        this.pendingRemoveAmenity = null;
+        this.loadAmenities();
+      },
+      error: (err: any) => {
+        this.amenityError = err?.error?.detail || 'Failed to remove amenity';
+        this.amenityLoading = false;
+        this.showConfirmModal = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  onCancelRemove() {
+    this.showConfirmModal = false;
+    this.pendingRemoveAmenity = null;
   }
 
   editAmenityPrice(amenity: any) {
-    const current = amenity.custom_price ?? amenity.base_price ?? 0;
-    const input = prompt('Enter custom price (leave empty to reset to base price)', String(current));
-    if (input === null) return; // cancelled
-    const val = input.trim() === '' ? null : Number(input);
-    const amenityLinkId = amenity.id;
-    if (val === null) {
-      // reset to base price by setting custom_price to null — assuming API supports null
-      this.hallService.updateAmenityPrice(amenityLinkId, null as any).subscribe({
-        next: () => this.loadAmenities(),
-        error: (err: any) => { this.amenityError = err?.error?.detail || 'Failed to update price'; this.cdr.markForCheck(); }
-      });
-      return;
-    }
-    if (isNaN(val) || val < 0) {
-      alert('Please enter a valid non-negative number');
-      return;
-    }
-    this.hallService.updateAmenityPrice(amenityLinkId, val).subscribe({
-      next: () => this.loadAmenities(),
-      error: (err: any) => { this.amenityError = err?.error?.detail || 'Failed to update price'; this.cdr.markForCheck(); }
+    this.pendingEditAmenity = amenity;
+    this.editInitialPrice = amenity.custom_price ?? amenity.base_price ?? null;
+    this.showEditPriceModal = true;
+  }
+
+  onSaveEditPrice(price: number | null) {
+    if (!this.pendingEditAmenity) return;
+    this.amenityLoading = true;
+    this.amenityError = null;
+    const id = this.pendingEditAmenity.id;
+    this.hallService.updateAmenityPrice(id, price as any).subscribe({
+      next: () => {
+        this.showEditPriceModal = false;
+        this.pendingEditAmenity = null;
+        this.editInitialPrice = null;
+        this.loadAmenities();
+      },
+      error: (err: any) => {
+        this.amenityError = err?.error?.detail || 'Failed to update price';
+        this.amenityLoading = false;
+        this.showEditPriceModal = false;
+        this.cdr.markForCheck();
+      }
     });
+  }
+
+  onCancelEditPrice() {
+    this.showEditPriceModal = false;
+    this.pendingEditAmenity = null;
+    this.editInitialPrice = null;
   }
 
   // Service methods
